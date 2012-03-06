@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<meta content="text/html; charset=utf-8">
+		<script type="text/javascript" src="jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="raphael.js" charset="utf-8"></script>
+		<script type="text/javascript" src="TestCase1.js" charset="utf-8"></script>
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			#canvas {
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 50px;
+				margin: 0;
+				padding: 0;
+				background: white;
+				width: 600px;
+				height: 600px;
+			}
+			#buttons {
+                position: absolute;
+                right:0;
+                height:20px;
+                background: #eef;
+                padding:10px;
+            }
+		</style>
+		</head>
+		<body>
+			<div id="canvas"></div>
+			<script type="text/javascript">
+				var paper = Raphael("canvas", 600, 600);
+			</script>
+			<div id="buttons">
+				<input type="button" value="Create" onclick="create()"/>
+				<input type="button" value="Update" onclick="update()"/>
+				<input type="button" value="Destroy" onclick="destroy()"/>
+			</div>
+		</body>
+	</head>
+</html>

@@ -1,0 +1,179 @@
+<h1>
+	Getting Started with Linb</h1>
+<p>
+	This article lists steps and tricks to apply linb (www.linb.net) to a formal project</p>
+<h2>
+	Pre-Knowledge</h2>
+<h3>
+	Symbol Links in NTFS</h3>
+<p>
+	You will need to use symbol link to make your project better organized. If you are on Windows, download <span style="color:#00f;">Junction</span> from&nbsp;<a href="http://technet.microsoft.com/en-CA/sysinternals/bb896768.aspx">http://technet.microsoft.com/en-CA/sysinternals/bb896768.aspx</a>. It can create symbol link across partitions.</p>
+<p>
+	Some articles on Web talk about delete symbol link in Windows Explorer also deletes the folder pointed to by the symbol link. It is <strong>NOT TRUE</strong> on my Windows XP. I guess Microsoft fixed that. You can test at your Windows to make sure it doesn&#39;t happen.</p>
+<h2>
+	Prepare Environment on Your Local Machine&nbsp;</h2>
+<h3>
+	Install Web server + PHP at Your Local Computer</h3>
+<p>
+	For Windows, an easy way is&nbsp;<a href="http://bitnami.org/stack/wampstack">http://bitnami.org/stack/wampstack</a>, which installs apache + PHP + MySQL.</p>
+<h3>
+	Download Linb From Google Code</h3>
+<p>
+	You should download using subversion:&nbsp;<a href="http://code.google.com/p/linb/source/checkout">http://code.google.com/p/linb/source/checkout</a>,&nbsp;so it&#39;s easy to get updated</p>
+<h3>
+	Publish Downloaded Folder&nbsp;jsLinb[x.y] through Web Server</h3>
+<p>
+	You can either create a symbol link (points to folder jsLinb[x.y]) under your web server publishing folder, or copy folder jsLinb[x.y] to web server publishing folder. You can also optionally create a virtual host for it too.</p>
+<h3>
+	Create Symbol Link Points to Your Working Folder under Linb</h3>
+<p>
+	The simple Linb UI builder is more like a tool to try out linb quickly. For a formal project, we have to use the advanced version. The advanced version can only manage projects under folder&nbsp;jsLinb[x.y]\VisualJS\projects, and in most cases our working folder is at somewhere else (for instance, in our subversion working copy folder). So we need to create a symbol link under&nbsp;folder&nbsp;jsLinb[x.y]\VisualJS\projects, which points to the working folder located elsewhere. For example:</p>
+<p style="margin-left: 40px; ">
+	jsLinb[x.y]\VisualJS\projects\cloud -&gt; working_branch\cloud\webapp</p>
+<p>
+	Make sure web server has write permission to your working folder.</p>
+<h2>
+	Plan Web Application Layout</h2>
+<p>
+	The goal is to break UI related JavaScript and logic related&nbsp;JavaScript into different files, so they can be modified independently by different team members easily.</p>
+<h3>
+	The Default Application Layout of Linb and getCom</h3>
+<p>
+	Create a new project with linb IDE (hosted at your local web server) you can see all UI related JavaScript are saved at folder&nbsp;<span style="color:#00f;">App\js</span>. This default layout matches the rule used by <span style="color:#00f;">linb.ComFactory.getCom</span>. You should read chapter 4 &quot;<span style="color:#0000cd;">Distributed UI</span>&quot; of <span style="color:#00f;">jsLinb[x.y]\cookbook\linb3.0-guide.cn.doc</span> to have a basic understanding of how linb distributed UI works.</p>
+<p>
+	<span style="color:#00f;">Note: </span></p>
+<ul>
+	<li>
+		You should not take time reading the details of all the UI controls until you start to use some of them in your projects.</li>
+	<li>
+		According to author of linb,&nbsp;linb.UI.Tag is seldom used now. Simply ignore it.</li>
+	<li>
+		My experience is the conf.js can be ignored too. It&#39;s good enough to&nbsp;use names like <span style="color:#0000cd;">App.Module</span> to load distributed modules</li>
+</ul>
+<h3>
+	Modify the Default Application Layout</h3>
+<p>
+	With linb IDE, all event handling JavaScript is added to the same js file which generates the UI. Now let&#39;s break them up:</p>
+<ol>
+	<li>
+		Rename the App folder to AppUI. Also change class names from&nbsp;<span class="Apple-style-span" style="color: rgb(0, 0, 205); ">App.Module </span>to<span class="Apple-style-span" style="color: rgb(0, 0, 205); ">&nbsp;</span><span class="Apple-style-span" style="color: rgb(0, 0, 205); ">AppUI.Module</span>. Nothing breaks.</li>
+	<li>
+		Do not add any event in linb IDE.</li>
+	<li>
+		Initialize all event hooking logic in <span style="color:#0000cd;">onEnd</span> callback parameter of&nbsp;<span class="Apple-style-span" style="color: rgb(0, 0, 255); ">linb.ComFactory.getCom </span>or<span class="Apple-style-span" style="color: rgb(0, 0, 255); "> linb.Com.load.</span></li>
+</ol>
+<p style="margin-left: 40px; ">
+	Suppose you have a control whose id is &#39;treebar_main&#39; (defined in IDE), in the <span style="color:#00f;">onEnd </span>callback, refer to it with:</p>
+<p style="margin-left: 80px; ">
+	<span style="font-family:courier new, courier, monospace;">var treebar_main = this.treebar_main;</span></p>
+<p style="margin-left: 40px; ">
+	To add event handler to it:</p>
+<p style="margin-left: 80px; ">
+	<span style="font-family:courier new, courier, monospace;">treebar_main.beforeClickEffect(function(profile, item, e, src, type) { ... });</span></p>
+<p>
+	We can go one step further to put the business logic JavaScript into another lib.Com object:</p>
+<ol>
+	<li>
+		Create a new folder named <span style="color:#00f;">App</span> and subfolder <span style="color:#0000cd;">App\js</span>.</li>
+	<li>
+		Create file&nbsp;<span style="color:#0000cd;"><span class="Apple-style-span">App\js\</span>Module1.js</span> like this:</li>
+</ol>
+<p style="margin-left: 40px; ">
+	<span style="font-family:courier new, courier, monospace;">Class(&#39;App.Module1&#39;, &#39;linb.Com&#39;,{<br />
+	&nbsp;&nbsp; &nbsp;Instance:<br />
+	&nbsp;&nbsp; &nbsp;{<br />
+	<span class="Apple-tab-span" style="white-space:pre"> </span>&nbsp;&nbsp; &nbsp; &nbsp;initialize : function()<br />
+	<span class="Apple-tab-span" style="white-space:pre"> </span>&nbsp;&nbsp; &nbsp; &nbsp;{<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.func_name = function(para1, para2)<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;linb.ComFactory.getCom(&#39;AppUI.Module1&#39;, function()<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; this.show(function()<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // business logic code that hooks up all events. which can refer para1, para2 too.<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;var treebar_main = this.treebar_main;<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;});<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+	&nbsp;&nbsp; &nbsp; &nbsp; }<br />
+	&nbsp;&nbsp; &nbsp;}<br />
+	&nbsp;});</span></p>
+<p>
+	<span style="color:#00f;">App\js\Module1.js</span> contains the code to load up <span style="color:#00f;">AppUI\js\Module1.js </span>and initialize business logic related to it. The only constraint between&nbsp;<span style="color:#0000cd;">App\js\Module1.js</span> and&nbsp;<span style="color:#00f;">AppUI\js\Module1.js</span> is the ID of business logic related UI controls should be consistent.</p>
+<p>
+	To load up and initialize&nbsp;<font class="Apple-style-span" color="#0000FF">App\js\Module1.js </font>with parameters:</p>
+<p style="margin-left: 40px; ">
+	<span style="font-family:courier new, courier, monospace;">linb.ComFactory.getCom(&#39;App.Module1&#39;, function()<br />
+	</span><span class="Apple-style-span" style="font-family: 'courier new', courier, monospace; ">{<br />
+	</span><span class="Apple-style-span" style="font-family: 'courier new', courier, monospace; ">&nbsp;&nbsp;this.func_name(para1, para2);<br />
+	</span><span class="Apple-style-span" style="font-family: 'courier new', courier, monospace; ">});</span></p>
+<h2>
+	Using Dialogs</h2>
+<h3>
+	Generate Dialog UI</h3>
+<p>
+	With linb, web application doesn&#39;t have to navigate from page to page as traditional ones. It&#39;s more nature and easy to stay in one page and use JavaScript to popup a dialog for a new group of function instead of navigate to another page. However, with linb IDE you cannot generate the UI code for a dialog directly. Here is how we do it:</p>
+<ol>
+	<li>
+		Open the linb UI bilder (the simpler version of linb IDE).</li>
+	<li>
+		Delete the button added by default and drop a dialog to the design area.</li>
+	<li>
+		Switch to code view, delete the code related to the button just deleted.</li>
+	<li>
+		Change the first code line to&nbsp;<span style="color:#00f;">Class(&#39;App<span style="color:#f00;">.DlgName</span>&#39;,&nbsp;&#39;linb.Com&#39;,{</span></li>
+	<li>
+		Copy the content of the code view to a new js file <span style="color:#0000cd;">AppUI\js\DlgName.js</span></li>
+	<li>
+		Reopen your project in advanced IDE so it reloads file folder list</li>
+	<li>
+		Open&nbsp;<span style="color:#0000cd;">AppUI\js\DlgName.js</span> in advanced IDE and go on adding other controls to the dialog.</li>
+</ol>
+<h3>
+	Dialog Tricks</h3>
+<h4>
+	To create a modal dialog</h4>
+<p>
+	Modify the&nbsp;<span style="color:#00f;">customAppend</span> function in dialog UI to:</p>
+<p style="margin-left: 40px; ">
+	<span style="font-family:courier new, courier, monospace;">this.dlg_id.show(null, true);</span>
+	<br />
+    <span style="font-family:courier new, courier, monospace;">return false;</span></p>
+<p>
+	Be noted that the JavaScript actually describes a linb.Com object containing a dialog, not a dialog object. So <span style="color:#00f;">this</span> refers to the linb.Com object.</p>
+<h4>
+	To reuse a dialog instance:</h4>
+<ul>
+	<li>
+		Return <span style="color:#00f;">false </span>at the&nbsp;<span style="color:#00f;">beforeClose</span> event of the dialog so the dialog will not be destroied
+        <p style="margin-left: 40px; ">
+        	<span style="font-family:courier new, courier, monospace;">this.dlg_id.show();</span>
+        	<br />
+        	<span style="font-family:courier new, courier, monospace;">return false;</span></p>
+    </li>
+
+	<li>
+		Always use&nbsp;<span style="color:#00f;">lnb.ComFactory.getCom</span> to loadup / show the dialog</li>
+</ul>
+<h2>
+	Deployment</h2>
+<p>
+	The main tasks for deployment are:</p>
+<ul>
+	<li>
+		Compress all JavaScript and css files,&nbsp;including distributed JavaScript files under&nbsp;<span style="color: rgb(0, 0, 255); ">App\js&nbsp;</span>and<span style="color: rgb(0, 0, 255); ">&nbsp;AppUI\js</span></li>
+	<li>
+		Make sure the deployed code uses compressed linb library (for example, not linb-debug.js)</li>
+	<li>
+		Join all compressed JavaScript files directly loaded by page (<strong>NOT</strong> including distributed JavaScript files under <span style="color:#00f;">App\js </span>and<span style="color:#00f;"> AppUI\js) </span>into one JavaScript file. Note that this will likely break the sequence of JavaScript be loaded by browser so the code need to be prepared for this. This is optional for local HTML application</li>
+	<li>
+		If the user of the web application locate mainly out of China mainland, use linb library hosted on appspot instead of hosted on our own server:&nbsp;http://jslinb.appspot.com/runtime/jsLinb/js/linb-all.js</li>
+</ul>
+<p>
+	Examples:</p>
+<ul>
+	<li>
+		jsLinb[x.y]\build\build_linb.bat compresses and joins multiple JavaScript files into one file</li>
+	<li>
+		<a href="deploy_linbapp.pl">deploy_linbapp.pl</a>&nbsp;Deployment script running on Linux. Besides java and YUI compressor, it requires subversion command line client program <span style="color:#00f;">svn</span>, and UNIX command line program <span style="color:#0000cd;">rm</span> and <span style="color:#0000cd;">cat</span> to delete and join files. To make it work on Windows, you can install a subversion windows command line client, and modify the call to <span style="color:#00f;">rm </span>and<span style="color:#00f;"> cat </span>to <span style="color:#00f;">del </span>and<span style="color:#00f;"> type</span></li>
+</ul>

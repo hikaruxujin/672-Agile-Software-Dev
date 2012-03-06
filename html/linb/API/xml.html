@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta name="keywords" content="javascript_UI_Builder, javascript, UI Builder, RIA, SPA, client SOA, linb, jsLinb, IDE, UI, GUI, javascript OOP, opensource, open-source, Ajax, cross-browser, WYSIWYG editor" />
+    <meta name="description" content="Web application created by Visual JS, powered by LINB framework" />
+    <meta name="copyright" content="copyright@www.linb.net" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta content="IE=EmulateIE7" http-equiv="X-UA-Compatible">
+    <title>jsLINB_AJAX_Builder -- Web application powered by LINB framework</title>
+</head>
+    <body>
+        <textarea id="out" class="html plain"></textarea>
+
+        <script type="text/javascript" src="../runtime/jsLinb/js/linb-debug.js"></script>
+        <script type="text/javascript" src="../runtime/jsLinb/js/adv-debug.js"></script>
+        <script type="text/javascript" src="../runtime/jsLinb/js/Coder-debug.js"></script>
+        <script type="text/javascript" src="Locale/en.js"></script>
+        <script type="text/javascript">
+linb.main(function(){
+    linb.setAppLangKey("app");
+    
+    var api2xml=function(){
+        var t,
+            doc=linb.Locale[linb.getLang()].doc,
+            map1={_:1,$:1},
+            map2={prototype:1,constructor:1,toString:1,valueOf:1,upper:1,Constructor:1,After:1,Before:1,KEY:1},
+            reg=/\./,
+            ghash={},
+            getAPI=function(o,tag){
+                var tt,hash;
+                ghash[tag]={
+                    completion:{
+                        '@version':'jsLinb-2.1.2.1b',
+                        '@extends':((function(tag){var a=[],t=linb.SC(tag).$parent; if(t && t.length){_.arr.each(t,function(o){a.push(o.KEY)}); return a.join(',')}else return 'Object'})(tag)),
+                        '@parent':(tt=tag.split('.')).length>1?tt.slice(0,tt.length-1).join('.'):'window',
+                        '@prefix':tag,
+                        item:[]
+                    }
+                };
+                hash=ghash[tag].completion.item;
+    
+                var k=o.KEY;
+                for(var i in o){
+                    if(!map1[i.charAt(0)] && !map2[i] && !reg.test(i)){
+                        if(typeof o[i]=='function'&& o[i].$linb$)
+                            getAPI(o[i],tag+'.'+i);
+                        else{
+                            if(typeof (t=o[i])!='function' || !(t=t.$original$) || t==k){
+                                var v=_.get(doc,(tag+'.'+i).split('.')),ss="",s="",r="void",a,aa,h;
+                                if(v){
+                                    if(typeof linb.SC(tag+'.'+i)=='function'){
+                                        aa=[];
+                                        a=v.$paras;
+                                        if(a && a.length){
+                                            _.arr.each(a,function(o){
+                                                s=o.replace(/\.$/,'').replace(/(\w+)\s*(\[\w+\])?(\s*\:\s*)([\w\./\[\]]+)(.*)/,'$4 $1');
+                                                if(o.indexOf("[Optional]")!=-1)
+                                                    s = "["+s+"]";
+                                                aa.push(s);
+                                            })
+                                        }
+                                    }
+                                    if(aa)
+                                        ss="("+aa.join(" , ")+")";
+                                    r=v.$rtn?v.$rtn:r;
+                                    r=r.replace("[self]",tag);
+                                }
+                                h={
+                                    '@rpel':tag+"."+i,
+                                    '@display':tag+"."+ i + ss + ' : ' + r
+                                };
+                                if(v&&v.$desc)
+                                    h['#cdata']=(v&&v.$desc);
+
+                                hash.push(h);
+                            }
+                        }
+                    }
+                }
+                o=o.prototype;
+                for(var i in o)
+                    if(!map1[i.charAt(0)])
+                        if(typeof (t=o[i])=='function' && (!(t=t.$original$) || t==k)){
+                                var v=_.get(doc,(tag+'.prototype.'+i).split('.')),ss="",s="",r="void",a,aa,h;
+                                if(v){
+                                    if(typeof linb.SC(tag+'.prototype.'+i)=='function'){
+                                        aa=[];
+                                        a=v.$paras;
+                                        if(a && a.length){
+                                            _.arr.each(a,function(o){
+                                                s=o.replace(/\.$/,'').replace(/(\w+)\s*(\[\w+\])?(\s*\:\s*)([\w\./\[\]]+)(.*)/,'$4 $1');
+                                                if(o.indexOf("[Optional]")!=-1)
+                                                    s = "["+s+"]";
+                                                aa.push(s);
+                                            })
+                                        }
+                                    }
+                                    if(aa)
+                                        ss="("+aa.join(" , ")+")";
+                                    r=v.$rtn?v.$rtn:r;
+                                    r=r.replace("[self]",tag);
+                                }
+                            h={
+                                '@rpel':i,
+                                '@display':i + ss + ' : ' + r
+                            };
+                            if(v&&v.$desc)
+                                h['#cdata']=(v&&v.$desc);
+                            hash.push(h);
+                        }
+            };
+        _.arr.each(['_','_.fun','_.str','_.arr','Class','Namespace','linb'],function(o,i){
+            getAPI(linb.SC(o),o);
+        });
+        var out={};
+        _.each(ghash,function(o,i){
+            out[i]=linb.XML.json2xml(o);
+        });
+        return out;
+    };
+    
+    var hash=api2xml();
+    var str="";
+    _.each(hash,function(o,i){
+        str +="<!------------><!------------><!-- save as " + i + ".xml --><!------------><!------------>" + o;
+    });
+    
+    linb("out").text( str );
+    
+    linb.Coder.applyById("out",true);
+});
+        </script>
+
+</body>
+</html>

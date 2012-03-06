@@ -1,0 +1,1 @@
+The deploy perl script is for *nix / Mac OSX, it was contributed by Martin Feng(fengxk@gmail.com).

@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Raphael - Graffle</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="raphael.js" charset="utf-8"></script>
+        <script type="text/javascript" src="raphael.json.js" charset="utf-8"></script>
+        <script type="text/javascript" src="graffle.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            function create() {
+                r.rect(10, 10, 60, 40, 2).attr({fill:'#fff'})
+										 .drag(onmove, onstart, onend)
+										 .toBack()
+										 .data("x", 0);
+				r.bottom.data("equation", prompt("Enter string for created shape:", ""));
+				var tempstring = r.text(r.bottom.attr("width")/2 + r.bottom.attr("x"),
+					   r.bottom.attr("height")/2 + r.bottom.attr("y"),
+					   r.bottom.data("equation"));
+				r.bottom.data("text", tempstring);
+            }
+            function update() {
+                //r.bottom.attr({fill:'#f00','fill-opacity':1});
+				r.bottom.removeData("equation");
+				r.bottom.data("equation", prompt("Enter string for created shape:", ""));
+				r.bottom.data("text").remove();
+				r.bottom.removeData("text")
+				var tempstring = r.text(r.bottom.attr('width')/2 + r.bottom.attr('x'),
+					   r.bottom.attr('height')/2 + r.bottom.attr('y'),
+					   r.bottom.data("equation"));
+				r.bottom.data("text", tempstring);
+            }
+            function remove() {
+				r.bottom.data("text").remove();
+                r.bottom.remove();
+            }
+        </script>
+        <style type="text/css">
+            body {
+                margin:0;
+                padding:0;
+            }
+            #canvas {
+                position:absolute;
+                left:200px;
+                top:0;
+                bottom:220px;
+                right:0;
+                padding:0;
+                margin:0;
+                background: white;
+            }
+            #json {
+                position:absolute;
+                left:0;
+                top:0;
+                bottom:0;
+                width:180px;
+                margin:0;
+                padding:10px;
+                overflow-y:auto;
+                overflow-x:hidden;
+                background: #eee;
+                font-size:12px;
+            }
+            #svg {
+                position:absolute;
+                right:0;
+                bottom:0;
+                left:200px;
+                height:160px; /*180*/
+                margin:0;
+                padding:10px;
+                overflow-y:auto;
+                overflow-x:hidden;
+                background: #eee;
+                font-size:12px;
+            }
+            #buttons {
+                position: absolute;
+                bottom:180px;
+                left:200px;
+                right:0;
+                height:20px; /*40*/
+                background: #eef;
+                padding:10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="canvas"></div>
+        <div id="json"></div>
+        <div id="svg"></div>
+        <div id="buttons">
+            <input type="button" onclick="create()" value="Create">
+            <input type="button" onclick="update()" value="Update">
+            <input type="button" onclick="remove()" value="Remove">
+        </div>
+    </body>
+</html>

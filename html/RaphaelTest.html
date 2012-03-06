@@ -1,0 +1,82 @@
+<html>  
+    <head>  
+        <title>Raphael Play</title> 
+        <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+        <script type="text/javascript" src="js/raphael.js"></script>   
+        <script type="text/javascript" src="js/raphael.json.js"></script>
+        <script type="text/javascript" src="js/jquery.xml2json.js"></script>
+        <script type="text/javascript" src="js/raphael.arrow.js"></script>
+        <style type="text/css">  
+            #canvas {  
+                width: 800px;  
+                height: 600px;
+                border: 1px solid #aaa;
+                float:left;
+
+            }  
+            #text {
+                width: 400px;  
+                height: 600px;
+                border: 1px solid #aaa;
+                float:left;
+                float:left;
+            }
+        </style>  
+        <script type="text/javascript">
+            var paper; 
+            window.onload = function () {
+                paper = Raphael("canvas", 800, 600);
+                var o = paper.ellipse(200, 200, 150, 175);
+                o.attr({fill: "#f00"});
+                var m = paper.ellipse(200, 200, 77, 158);
+                m.attr({fill:"#a30000"});
+                var i = paper.ellipse(200, 200, 72, 153);
+                i.attr({fill:"#fff"});
+                var t = paper.text(200,200,"what?");
+                var arrow = paper.arrow(100,0,100,100,50);
+                var start = function () {
+                    // storing original coordinates 
+                    this .ox = this .attr("cx" );
+                    this .oy = this .attr("cy" );
+                    this .attr({opacity: 1 });
+                },
+                move = function (dx, dy) {
+                    // move will be called with dx and dy 
+                    this .attr({cx: this .ox + dx, cy: this .oy + dy});
+                },
+                up = function () {
+                    // restoring state 
+                    this .attr({opacity: .5 });
+                };
+                
+                //o.drag(move, start, up);
+                
+            }
+        </script>
+        <script type="text/javascript" src="js/jquery.xml2json.js"></script>
+        <script type="text/javascript">
+            // Changes XML to JSON
+
+            $(document).ready(function(){
+                $("button").click(function(){
+                    //$("#text").text($("#canvas").html());
+                    //var xml = "<xml>"+ $("#canvas").html()+ "</xml>";
+                    //var json = $.xml2json(xml); 
+                    var json = $.parseJSON(paper.toJSON());
+                    //json = paper.serialize.json();
+                    $("#text").html(paper.toJSON()); 
+                     var paper2 = Raphael("text", 800, 600);
+                     paper2.fromJSON(json);
+                });
+            });
+        </script>
+    </head>  
+    <body>  
+        <div id="canvas">
+        </div>
+        <button>export</button>
+        <div id="text">
+
+        </div>
+    </body>  
+</html>  

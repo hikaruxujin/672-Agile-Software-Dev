@@ -1,0 +1,70 @@
+===================================
+Code
+===================================
+Added TagEditor, FoldingTabs Widgets
+Added XMLRPC/SOAP client wrappers
+-----------------------------------
+Added properties to linb.DataBinder: 
+    data, dataSourceType, queryURL, queryMethod, queryAsync, queryModel, queryArgs, proxyType, requestType, responseType
+Removed functions from linb.DataBinder: 
+    getValue, resetValue
+Added functions to linb.DataBinder: 
+    getDirtied, updateDataToUI, updateDataFromUI, invoke, read, write
+Added events to linb.DataBinder: 
+    beforeUpdateDataToUI, afterUpdateDataFromUI, beforeInvoke, afterInvoke, beforeRead, afterRead, beforeWrite, afterWrite
+Added property to linb.Com:
+    dataBindLoadType
+Added functions to linb.Com:
+    getDataBinders
+Added functions to linb.UI.TreeGrid:
+    offEditor, autoRowHeight, autoColWidth, addHotRow, removeHotRow, sortColumn
+Added properties to linb.UI.Input:
+    labelSize, labelPos, labelGap, labelCaption, labelHAlign 
+Added events to linb.UI.Input:
+    onLabelClick, onLabelDblClick, onLabelActive 
+Moved functions from linb.UI to linb.absObj:
+    getProperties, setProperties, getEvents, setEvents
+Added properties to linb.UI.RadioBox:
+    checkBox
+Removed functions from linb.UI.TimeLine:
+    fixedWidth
+Added properties to linb.UI.absList/linb.UI.TreeGrid:
+    valueSeparator
+Added properties to linb.UI.TreeGrid:
+    rowOptions, colOptions, treeMode, hotRowMode, hotRowNumber
+Added events to linb.UI.TreeGrid:
+    beforeInitHotRow,onInitHotRow,beforeHotRowAdded,afterHotRowAdded,onRowDirtied,beforeCellUpdated,afterCellUpdated
+Added properties to linb.UI.Span/linb.UI.Div/linb.UI.Block/linb.UI.Dilalog/linb.UI.Tabs/linb.UI.Layout:
+    overflow
+Removed keys from linb.absIO(linb.Ajax/linb.SAjax/linb.IAjax):
+    "type" and "randKey"
+Added keys to linb.absIO options:
+    "proxyType", "Accept", "contentType", "header"
+    "username" and "password" (for linb.Ajax only)
+Added functions to linb.UI.ComboInput
+    getPopWnd
+Added events to linb.UI.ComboInput
+    afterPosShow
+
+Modified Ajax to return object(plain text in previous version) by default;
+Modified all backend code according according to the updated linb.absIO.
+-----------------------------------
+Added some new code examples
+
+===================================
+Builder
+===================================
+Allowed pre-configured widgets in the "Tool Box"
+Added custom decoration dialog
+Added in-place editor
+Added context menu
+-----------------------------------
+
+
+===================================
+TODO
+===================================
+To add redo/undo functions in Builder canvas
+To add some useful wizard for the Builder
+To add svg based(linb.SVG) Line/Shape/... widgets
+To add a flowchart Application demo

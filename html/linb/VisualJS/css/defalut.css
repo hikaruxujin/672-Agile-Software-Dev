@@ -1,0 +1,49 @@
+.linb-list-codemirror-item{
+    padding:1px;
+    font-size:10px;
+}
+
+.CodeMirror-line-numbers-bg {
+    background:#EBEFF2;
+}
+
+.CodeMirror-line-numbers {
+  width: 40px;
+  text-align: right;
+  margin: 4px;
+  margin-left: 0;
+  padding: 0;
+}
+
+.CodeMirror-line-numbers div{
+    font-family: "courier New", courier, monospace; 
+    font-size: 13px;
+    line-height:15px;
+    height:15px;
+    white-space:nowrap;
+    text-align:right;
+}
+.CodeMirror-line-numbers span{
+    font-size:0;
+    height:9px;
+    width:9px;
+    margin-left:2px;
+    background:none;
+}
+.CodeMirror-line-hide{
+    display:none;
+}
+.CodeMirror-line-fold span{
+    background:url(../img/codemirror/fold.gif) no-repeat center;
+}
+.CodeMirror-line-expand span{
+    background:url(../img/codemirror/expand.gif) no-repeat center;
+}
+
+
+.doc-inndiv{
+    margin:3px;
+}
+.doc-inndiv li{
+    padding-left:20px;
+}

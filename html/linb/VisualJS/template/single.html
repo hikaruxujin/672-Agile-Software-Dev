@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta name="keywords" content="javascript_UI_Builder, javascript, UI Builder, RIA, SPA, client SOA, linb, jsLinb, IDE, UI, GUI, javascript OOP, opensource, open-source, Ajax, cross-browser, WYSIWYG editor" />
+    <meta name="description" content="Web application created by Visual JS, powered by LINB framework" />
+    <meta name="copyright" content="copyright@www.linb.net" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta content="IE=EmulateIE7" http-equiv="X-UA-Compatible">
+    <title>jsLINB_AJAX_Builder -- jsLinb Examples</title>
+</head>
+    <body>
+        <div id='loading'><img src="{libpath}runtime/loading.gif" alt="Loading..." /></div>
+        <script type="text/javascript" src="{libpath}runtime/jsLinb/js/linb-all.js"></script>
+        <script type="text/javascript" src="{libpath}runtime/jsLinb/js/adv-all.js"></script>
+        <script type="text/javascript">
+{content}
+
+//linb.setAppLangKey('app');
+linb.UI.setTheme('{theme}');
+linb.Com.load('{clsName}', function(){linb('loading').remove()}, '{lang}');
+        </script>
+</body>
+</html>

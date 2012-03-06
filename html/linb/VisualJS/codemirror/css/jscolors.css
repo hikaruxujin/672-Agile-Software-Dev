@@ -1,0 +1,71 @@
+html {
+  cursor: text;
+}
+
+.editbox {
+  margin: 4px;
+  padding: 0;
+  font-family: "courier New", courier, monospace;
+  font-size: 13px;
+  line-height:15px;
+  color: #000;
+}
+
+pre.code, .editbox {
+  color: #666666;
+}
+
+.editbox p {
+  margin: 0;
+}
+
+span.js-punctuation, b.js-punctuation{
+  color: #000;
+}
+
+span.js-operator {
+  color: #666666;
+}
+
+span.js-keyword {
+  color: #0000ff;
+}
+
+span.js-atom {
+  color: #228811;
+}
+
+span.js-variable {
+  font-weight:bold;
+  color: black;
+}
+
+span.js-variabledef {
+  font-weight:bold;
+}
+
+span.js-localvariable {
+  color: #004499;
+}
+
+span.js-property {
+  color: black;
+}
+
+span.js-comment {
+  color: #AA7700;
+}
+
+span.js-string {
+  color: #AA2222;
+}
+
+span.js-regexp{
+  color: #AA2222;
+}
+
+/*added by linb*/
+span.js-linbglobal {
+    color: #ff0000;
+    font-weight:bold;
+}

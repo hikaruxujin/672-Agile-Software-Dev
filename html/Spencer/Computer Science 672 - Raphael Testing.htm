@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Computer Science 672 - Raphael Testing</title>
+  <script type="text/javascript"
+ src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="raphael.js" charset="utf-8"></script>
+  <script type="text/javascript" src="raphael.json.js" charset="utf-8"></script>
+  <script type="text/javascript" src="raphael.freetransform.js"
+ charset="utf-8"></script>
+  <script type="text/javascript" src="graffle.js" charset="utf-8"></script>
+  <style type="text/css">
+            body {
+                margin:0;
+                padding:0;
+                font-family: Helvetica;
+            }
+            p { margin: 0px 0px 7px 0px; }
+            .todo { color: #d77; }
+            #canvas {
+                position:absolute;
+                left:220px;
+                top:0;
+                bottom:220px;
+                right:0;
+                padding:0;
+                margin:0;
+                background: white;
+            }
+            #info {
+                position:absolute;
+                left:0;
+                top:0;
+                bottom:0;
+                width:200px;
+                margin:0;
+                padding:10px;
+                overflow-y:auto;
+                overflow-x:hidden;
+                background: #eee;
+                font-size:12px;
+            }
+            #console {
+                position:absolute;
+                right:0;
+                bottom:0;
+                left:220px;
+                height:160px; /*180*/
+                margin:0;
+                padding:10px;
+                overflow-y:auto;
+                overflow-x:hidden;
+                background: #eee;
+                font-size:12px;
+            }
+            #buttons {
+                position: absolute;
+                bottom:180px;
+                left:220px;
+                right:0;
+                height:20px; /*40*/
+                background: #eef;
+                padding:10px;
+            }
+        </style>
+</head>
+<body>
+<div id="canvas"></div>
+<div id="info">
+<p><b>JSON</b> Retrieves the JSON representation of the graph and
+displays it. <span class="todo">Need to remove FreeTransform's shapes.</span></p>
+<p><b>CREATE</b> Select your shape from the dropdown and click Create.
+The shape will be created and dropped into the middle of the canvas.</p>
+<p><b>SET TEXT</b> Select a shape, then click Set Text. A prompt will
+open up where you can edit the text of the selected shape. Shape will
+resize if text is too large. <span class="todo">Only resizes on rects.
+Doesn't clear when set to empty.</span></p>
+<p><b>CONNECT</b> Select a shape, then click Connect. You will enter
+the connection mode, where any shape you click will be connected to the
+selected shape. Click Connect again to quit the connection mode. The
+script checks for duplicate edges. <span class="todo">Should only
+redraw affected edges.</span></p>
+<p><b>EDGE ARROWS</b> </p>
+<table style="border-collapse: collapse;" width="100%">
+  <tbody>
+    <tr>
+      <td align="right">Stroke Width</td>
+      <td>
+      <select id="strokewidth" style="font-size: 10px;">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+      <option>6</option>
+      <option>7</option>
+      <option>8</option>
+      <option>9</option>
+      <option>10</option>
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <td align="right">Arrow Type</td>
+      <td>
+      <select id="type" style="font-size: 10px;">
+      <option value="none">None</option>
+      <option value="classic">Classic</option>
+      <option value="block">Block</option>
+      <option value="open">Open</option>
+      <option value="oval">Oval</option>
+      <option value="diamond">Diamond</option>
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <td align="right">Arrow Size</td>
+      <td>
+      <select id="size" style="font-size: 10px;">
+      <option value="long">Long</option>
+      <option value="midium">Midium</option>
+      <option value="short">Short</option>
+      </select>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p><b>REMOVE</b> Removes the selected shape, as well as the associated
+text and connections.</p>
+<p><b>HOT KEYS</b> </p>
+<div id="hotkeys">
+<table style="border-collapse: collapse;">
+  <tbody>
+    <tr>
+      <td><b>N</b></td>
+      <td>New Shape</td>
+    </tr>
+    <tr>
+      <td><b>T</b></td>
+      <td>Set Text</td>
+    </tr>
+    <tr>
+      <td><b>C</b></td>
+      <td>Connect Mode</td>
+    </tr>
+    <tr>
+      <td><b>R</b></td>
+      <td>Remove Shape</td>
+    </tr>
+    <tr>
+      <td><b>D</b></td>
+      <td>Deselect Shape</td>
+    </tr>
+    <tr>
+      <td><b>X</b></td>
+      <td>Select Next Shape</td>
+    </tr>
+    <tr>
+      <td><b>J</b></td>
+      <td>Display JSON</td>
+    </tr>
+    <tr>
+      <td><b>1</b></td>
+      <td>Select Rectangle</td>
+    </tr>
+    <tr>
+      <td><b>2</b></td>
+      <td>Select Rounded Rectangle</td>
+    </tr>
+    <tr>
+      <td><b>3</b></td>
+      <td>Select Circle</td>
+    </tr>
+    <tr>
+      <td><b>4</b></td>
+      <td>Select Ellipse</td>
+    </tr>
+    <tr>
+      <td><b>H</b></td>
+      <td>Enable / Disable Hotkeys</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div id="console"></div>
+<div id="buttons"> <input onclick="tojson()" value="JSON" type="button">
+<select id="shapes">
+<option value="rect">Rectangle</option>
+<option value="rrect">Rounded Rectangle</option>
+<option value="circle">Circle</option>
+<option value="ellipse">Ellipse</option>
+</select>
+<input onclick="create()" value="Create" type="button"> <input
+ onclick="update()" value="Set Text" type="button"> <input
+ onclick="connect()" value="Connect" type="button"> <input
+ onclick="remove()" value="Remove" type="button"> <span id="tip"
+ style="font-size: 12px;"></span> </div>
+</body>
+</html>

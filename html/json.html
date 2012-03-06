@@ -1,0 +1,35 @@
+<!DOCTYPE math PUBLIC "-//W3C//DTD MathML 2.0//EN" "http://www.w3.org/TR/MathML2/dtd/mathml2.dtd">
+<html>
+    <head>
+        <script type="text/javascript" src="js/raphael.js"></script>
+        <script type="text/javascript" src="js/raphael.json.js"></script>
+        <script type="text/javascript">
+            window.onload = function () {
+                var paper = Raphael('holder');
+
+                var rect = paper
+                .rect(50, 40, 50, 50)
+                .attr('fill', '#f00')
+                .transform('s2')
+                .rotate(10)
+                ;
+
+                var json = paper.toJSON();
+
+                //paper.clear();
+
+                paper2 = Raphael('holder2');
+
+                paper2.fromJSON(json);
+            }
+        </script>
+    </head>
+    <body>
+
+
+        <div id="holder"></div>
+        <div id="holder2"></div>
+
+
+    </body>
+</html>
