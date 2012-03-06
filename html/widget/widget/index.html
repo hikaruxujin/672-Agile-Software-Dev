@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Widget Testing</title>
+		
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="ui.grmml.js"></script>
+		<script type="text/javascript">
+            $(function() {
+                $('#box').grmml();
+            });
+		</script>
+		<link rel="stylesheet" type="text/css" href="jquery.ui.css"/>
+		<link rel="stylesheet" type="text/css" href="menu.css"/>
+		<style type="text/css">
+            #box { 
+                margin: 50px auto 0px auto; 
+                background: #eee; 
+                width: 800px; 
+                height: 500px; 
+                padding: 0;
+                border: 1px solid #aaa;
+            }
+		</style>
+	</head>
+	<body>
+	   <div id="box"></div>
+	   <div id="debug"></div>
+	</body>
+</html>
