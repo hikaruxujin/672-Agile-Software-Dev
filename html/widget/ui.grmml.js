@@ -13,10 +13,10 @@ $.widget("ui.grmml", {
             );},
             "Crunch": function() {
                 var url = 'http://130.127.48.51:5000/';
-                $('#debug').append('Sent '+url+' '+this.svg.toJSON()+'<br>');
+                $('#debug').prepend('Sent '+url+' '+this.svg.toJSON()+'<br>');
                 $.post(url, {data:this.svg.toJSON()}, 
                     function(data) {
-                        $('#debug').append('Received '+data+'<br>');
+                        $('#debug').prepend('Received '+data+'<br>');
                         this.svg.fromJSON(data);
                         this.dom.status.html('Success');
                     }
@@ -34,6 +34,7 @@ $.widget("ui.grmml", {
         "Shape": {
             "Edit Text": function() {this.svg.setShapeText();},
             "Connect": function() {this.svg.connectShapes();},
+            "Deselect": function() {this.svg.deselect();},
             "Delete": function() {this.svg.removeShape();}
         }
 	},
