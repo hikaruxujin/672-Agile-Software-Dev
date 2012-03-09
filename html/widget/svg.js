@@ -146,6 +146,10 @@ Raphael.fn.connection = function (obj1, obj2, line, bg) {
 
 // Element Event Handlers
 var ondragdown = function(){
+        
+        // Animate to Active
+        this.group.shape.animate({"fill-opacity":.8,fill:"#fdd"}, 500);
+
         // Get Selected
         var selected = this.group.svg.graph.selected;
         if (selected===null) {
@@ -196,6 +200,8 @@ var ondragdown = function(){
         });
     },
     ondragup = function () {
+        // Animate to normal
+        this.group.shape.animate({"fill-opacity":.5,fill:"#ddf"}, 500);
     };
     
 
@@ -273,10 +279,25 @@ function svg(canvasid,tipid) {
             this.x = x;
             this.y = y;
             this.transform("t"+this.x+","+this.y);
-            //this.paper.safari(); // Handle rendering bug in Safari
+            this.svg.paper.safari(); // Handle rendering bug in Safari
         };
-        group.setPosition(x,y);// Consider placing shapes relative to 0 so this is more useful
+        group.setText = function(text) {
+            // Update
+            this.text.attr('text',text);
+            var bbox = this.text.getBBox();
+            objatt = {
+                width : Math.max(bbox.width+10, this.getBBox().width),
+                height : Math.max(bbox.height,this.shape.attr('height'))
+            };
+            objatt.x = this.shape.attr('x')-((objatt.width-this.shape.attr('width'))/2);
+            this.shape.attr(objatt);
+        }
+        group.setPosition(x,y); // Consider placing shapes relative to 0 so this is more useful
         this.graph.nodes.push(group);
+        // this.graph.nodes[group.node.id] = group;
+        
+        // Return Group
+        return group;
     };
     
     // Set Shape Text 
@@ -353,6 +374,7 @@ function svg(canvasid,tipid) {
     this.nextShape = function() {
         var nodes = this.graph.nodes, next=0,
             selected = this.graph.selected;
+
         if (this.graph.selected) {
             $.each(nodes,function(i,e) {
                 if (e.node.id==selected.node.id) next=i+1;
@@ -403,15 +425,13 @@ function svg(canvasid,tipid) {
     }
     
     // Resize Canvas on Window Resize
+
     this.resize = function() {
         // Set Size of Canvas
         this.paper.setSize(this.canvas.width(), this.canvas.height());
-        // Update Bounding Boxes
-        var that = this;
-        $.each(this.graph.nodes,function(i,e) {
-            e.freeTransform.setOpts({boundary:that.getBoundary(e)});
-        });
     }
+    var that = this;
+    $(window).resize(function(){that.resize.call(that)});
     
     // to JSON
     this.toJSON = function() {
@@ -438,13 +458,42 @@ function svg(canvasid,tipid) {
             edges.push(attrs);
         });
         
-        return '{nodes:'+JSON.stringify(nodes)
-            +',edges:'+JSON.stringify(edges)+'}';
+        return '{"nodes":'+JSON.stringify(nodes)
+            +',"edges":'+JSON.stringify(edges)+'}';
     }
     
     // from JSON
     this.fromJSON = function(json) {
+        this.removeShape(true);
+        alert("cleared canvas");
+        try {
+            json = $.parseJSON(json);
+            var group, that=this;
+            $.each(json.nodes,function(i,e) {
+                group = that.addShape(e.type);
+                group.setPosition(e.x,e.y);
+                group.setText(e.text);
+            });
+            $.each(json.edges,function(i,e) {
+                that.graph.edges.push(
+                    that.paper.connection(
+                        that.getNode(e.source).shape,
+                        that.getNode(e.target).shape,
+                        '#000'
+                    ));
+            });
+        } catch (e) {
+            alert(e.message);
+        }
+    }
     
+    // gets node with mathing id
+    this.getNode = function(id) {
+        var node;
+        $.each(this.graph.nodes,function(i,n) {
+            if (n.node.id==id) node=n;
+        });
+        return node;
     }
 }
 
