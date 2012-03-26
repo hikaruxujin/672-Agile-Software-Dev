@@ -12,6 +12,7 @@ $.widget("ui.grmml", {
                 "March 7, 2012\n"
             );},
             "Crunch": function() {
+<<<<<<< HEAD
                 var url = 'http://130.127.48.51:5000/';
                 var json = this.svg.toJSON();
                 $('#debug').prepend('Sent '+url+' '+json+'<br>');
@@ -21,11 +22,27 @@ $.widget("ui.grmml", {
 */
                 $.post(url, {data:this.svg.toJSON()}, 
                     function(data) {
+=======
+                var url = 'http://130.127.48.51:5000/',
+                    json = this.svg.toJSON(),
+                    that = this;
+                $('#debug').prepend('Sent '+url+' '+json+'<br>');
+
+                //this.svg.fromJSON(json);
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: { data: this.svg.toJSON() }, 
+                    success: function(data) {
+>>>>>>> fafa95812ca01efeadead55cf1ece22da3f7a740
                         $('#debug').prepend('Received '+data+'<br>');
-                        this.svg.fromJSON(data);
-                        this.dom.status.html('Success');
+                        that.svg.fromJSON(data);
+                        that.dom.status.html('Success');
+                    },
+                    error: function(jqXHR, status, error) {
+                        $('#debug').prepend('Error '+status+'<br>');
                     }
-                );
+                });
             }
             //"Save": function() {},
             //"Load": function() {}
@@ -63,7 +80,10 @@ $.widget("ui.grmml", {
             .css({
                 position:'absolute',
                 top:0,left:0,right:0,
-                background:'#ddd'})
+                "border-bottom":"1px solid #888"
+                //background:'#ddd'
+            })
+            .addClass('gradient') // testing
             .append($('<ul class="grmml-menu">')
                 .css({display:'inline-block'}));
         this.dom.canvas = $('<div id="canvas">')
@@ -84,7 +104,7 @@ $.widget("ui.grmml", {
                 color:'#555'
             });
         this.element
-            .css({background:'#f9f9f9'})
+            .css({background:'#fff'})
             .html('')
             .append(this.dom.wrapper
                 .append(this.dom.menu)

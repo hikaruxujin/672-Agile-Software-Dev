@@ -279,7 +279,7 @@ function svg(canvasid,tipid) {
             this.x = x;
             this.y = y;
             this.transform("t"+this.x+","+this.y);
-            //this.paper.safari(); // Handle rendering bug in Safari
+            this.svg.paper.safari(); // Handle rendering bug in Safari
         };
         group.setText = function(text) {
             // Update
@@ -292,9 +292,15 @@ function svg(canvasid,tipid) {
             objatt.x = this.shape.attr('x')-((objatt.width-this.shape.attr('width'))/2);
             this.shape.attr(objatt);
         }
+<<<<<<< HEAD
         group.setPosition(x,y);// Consider placing shapes relative to 0 so this is more useful
         //this.graph.nodes.push(group);
         this.graph.nodes[group.node.id] = group;
+=======
+        group.setPosition(x,y); // Consider placing shapes relative to 0 so this is more useful
+        this.graph.nodes.push(group);
+        // this.graph.nodes[group.node.id] = group;
+>>>>>>> fafa95812ca01efeadead55cf1ece22da3f7a740
         
         // Return Group
         return group;
@@ -374,6 +380,7 @@ function svg(canvasid,tipid) {
     this.nextShape = function() {
         var nodes = this.graph.nodes, next=0,
             selected = this.graph.selected;
+
         if (this.graph.selected) {
             $.each(nodes,function(i,e) {
                 if (e.node.id==selected.node.id) next=i+1;
@@ -424,15 +431,13 @@ function svg(canvasid,tipid) {
     }
     
     // Resize Canvas on Window Resize
+
     this.resize = function() {
         // Set Size of Canvas
         this.paper.setSize(this.canvas.width(), this.canvas.height());
-        // Update Bounding Boxes
-        var that = this;
-        $.each(this.graph.nodes,function(i,e) {
-            e.freeTransform.setOpts({boundary:that.getBoundary(e)});
-        });
     }
+    var that = this;
+    $(window).resize(function(){that.resize.call(that)});
     
     // to JSON
     this.toJSON = function() {
@@ -478,14 +483,31 @@ function svg(canvasid,tipid) {
             $.each(json.edges,function(i,e) {
                 that.graph.edges.push(
                     that.paper.connection(
+<<<<<<< HEAD
                         that.graph.nodes[e.source].shape,
                         that.graph.nodes[e.target].shape,
+=======
+                        that.getNode(e.source).shape,
+                        that.getNode(e.target).shape,
+>>>>>>> fafa95812ca01efeadead55cf1ece22da3f7a740
                         '#000'
                     ));
             });
         } catch (e) {
             alert(e.message);
         }
+<<<<<<< HEAD
+=======
+    }
+    
+    // gets node with mathing id
+    this.getNode = function(id) {
+        var node;
+        $.each(this.graph.nodes,function(i,n) {
+            if (n.node.id==id) node=n;
+        });
+        return node;
+>>>>>>> fafa95812ca01efeadead55cf1ece22da3f7a740
     }
 }
 
