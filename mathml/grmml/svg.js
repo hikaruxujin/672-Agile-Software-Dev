@@ -259,6 +259,16 @@ function svg(canvasid,tipid) {
         }
         var textElement = this.paper.text(0, 0, "");
         
+        var value = prompt("Enter value for the selected object.",value);
+        //value ="x^2=1";
+        //var imgSrc = "http://latex.codecogs.com/png.latex?\\frac{x^2+1}{y^2}";
+        
+       			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
+       			 var newImg = new Image();
+       			 newImg.src = imgSrc;
+
+        var imgElement = this.paper.image(imgSrc,-30,-20,newImg.width,newImg.height);
+        imgElement.text = value;
         // Defaults
         element.attr({
             fill:"#ddf", 
@@ -272,6 +282,7 @@ function svg(canvasid,tipid) {
         var group = this.paper.set();
         group.push(element);
         group.push(textElement);
+        group.push(imgElement);
         group.forEach(function(elem){
             elem.group = group;
             // Assign each element the node id for json export?
@@ -280,6 +291,7 @@ function svg(canvasid,tipid) {
         // Group pointers and functions
         group.shape = element;
         group.text = textElement;
+        group.img = imgElement;
         group.node = {id:this.graph.nextid++}; // Null reference to group.node here
         group.svg = this;
         group.drag(ondragmove, ondragdown, ondragup);
@@ -311,11 +323,12 @@ function svg(canvasid,tipid) {
     // Set Shape Text 
     this.setShapeText = function() {
         if (this.graph.selected) {
-            var obj = this.graph.selected, value = obj.text.attr('text');
+            var obj = this.graph.selected, 
+            value = obj.img.text;
             value = prompt("Enter value for the selected object.",value);
             if (value) {
                 // Update Text
-                obj.text.attr({text:value});
+                //obj.text.attr({text:value});
                 // Resize Shape if necessary
                 var bbox = obj.text.getBBox();
                 objatt = {
@@ -324,8 +337,21 @@ function svg(canvasid,tipid) {
                 };
                 objatt.x = obj.shape.attr('x')-((objatt.width-obj.shape.attr('width'))/2);
                 obj.shape.attr(objatt);
-                //mathjax
-				
+                //image
+       			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
+       			 var newImg = new Image();
+       			 newImg.src = imgSrc;
+
+                //var imgElement = this.paper.image(imgSrc,-30,-20,newImg.width,newImg.height);
+                imgatt = {
+                    width :newImg.width,
+                    height :newImg.height
+                };
+                obj.img.attr(imgatt);
+                
+					 obj.img.text = value;
+					 obj.img.node.src = imgSrc;
+         		 obj.img.node.href.baseVal = imgSrc;
             }
         } else {
             alert("No object is selected.");
@@ -454,7 +480,7 @@ function svg(canvasid,tipid) {
                 type:   n.shape.type,
                 x:      n.x,
                 y:      n.y,
-                text:   n.text.attr('text'),
+                text:   n.img.text,
             };
             nodes.push(attrs);
         });
