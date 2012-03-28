@@ -259,16 +259,15 @@ function svg(canvasid,tipid) {
         }
         var textElement = this.paper.text(0, 0, "");
         
-        var value = prompt("Enter value for the selected object.",value);
         //value ="x^2=1";
-        //var imgSrc = "http://latex.codecogs.com/png.latex?\\frac{x^2+1}{y^2}";
+        var imgSrc = "http://latex.codecogs.com/png.latex?";
         
-       			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
+       			 //var imgSrc = "http://latex.codecogs.com/svg.latex?"+value;
        			 var newImg = new Image();
        			 newImg.src = imgSrc;
 
-        var imgElement = this.paper.image(imgSrc,-30,-20,newImg.width,newImg.height);
-        imgElement.text = value;
+        var imgElement = this.paper.image(imgSrc,-30,-10,0,0);
+        imgElement.text = "";
         // Defaults
         element.attr({
             fill:"#ddf", 
@@ -341,17 +340,23 @@ function svg(canvasid,tipid) {
        			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
        			 var newImg = new Image();
        			 newImg.src = imgSrc;
-
-                //var imgElement = this.paper.image(imgSrc,-30,-20,newImg.width,newImg.height);
-                imgatt = {
-                    width :newImg.width,
-                    height :newImg.height
-                };
-                obj.img.attr(imgatt);
+				 imgReady(imgSrc, function () {
+				    imgatt = {
+						width :newImg.width,
+						height :newImg.height
+					};
+		            objatt = {
+						width :newImg.width+40,
+						height :newImg.height+40
+					};
+					obj.shape.attr(objatt);
+					obj.img.attr(imgatt);
                 
-					 obj.img.text = value;
-					 obj.img.node.src = imgSrc;
-         		 obj.img.node.href.baseVal = imgSrc;
+					obj.img.text = value;
+					obj.img.node.src = imgSrc;
+					obj.img.node.href.baseVal = imgSrc;
+				});
+
             }
         } else {
             alert("No object is selected.");
