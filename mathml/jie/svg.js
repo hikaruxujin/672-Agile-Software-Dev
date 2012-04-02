@@ -243,34 +243,24 @@ function svg(canvasid,tipid) {
         var x = this.canvas.width() / 2;
         var y = this.canvas.height() / 2;
         var element;
-		var imgElement;
         switch (shape) {
             case "circle":
                 element = this.paper.circle(0,0,30);
-				imgElement = this.paper.image(imgSrc,10,10,0,0);
                 break;
             case "ellipse":
                 element = this.paper.ellipse(0,0,50,30);
-				imgElement = this.paper.image(imgSrc,0,0,0,0);
                 break;
             case "rect":
-                element = this.paper.rect(0,0,100,60);
-				imgElement = this.paper.image(imgSrc,10,10,0,0);
+                element = this.paper.rect(-50,-30,100,60);
                 break;
             case "rrect": // Rounded Rectangle
-                element = this.paper.rect(0,0,100,60,10);
-				imgElement = this.paper.image(imgSrc,10,10,0,0);
+                element = this.paper.rect(-50,-30,100,60,10);
                 break;
         }
-        //var textElement = this.paper.text(0, 0, "");
+        var textElement = this.paper.text(0, 0, "");
+	var ig = $("<img src='http://latex.codecogs.com/svg.latex?1+sin(x)' border='0'/>");
+	var img = this.paper.image(ig,0,0,100,100);
         
-        //image
-        var imgSrc = "http://latex.codecogs.com/png.latex?";
-       	//var imgSrc = "http://latex.codecogs.com/svg.latex?"+value;
-       	var newImg = new Image();
-       	newImg.src = imgSrc;
- 
-        imgElement.text = "";
         // Defaults
         element.attr({
             fill:"#ddf", 
@@ -279,12 +269,12 @@ function svg(canvasid,tipid) {
             "stroke-width":1, 
             cursor:"move"
         });
-        //textElement.attr({'font-family':'Helvetica','font-size':'14px'});
+        textElement.attr({'font-family':'Helvetica','font-size':'14px'});
         
         var group = this.paper.set();
         group.push(element);
-        //group.push(textElement);
-        group.push(imgElement);
+        group.push(textElement);
+	group.push(img);
         group.forEach(function(elem){
             elem.group = group;
             // Assign each element the node id for json export?
@@ -292,8 +282,8 @@ function svg(canvasid,tipid) {
         
         // Group pointers and functions
         group.shape = element;
-        //group.text = textElement;
-        group.img = imgElement;
+        group.text = textElement;
+	group.img = img;
         group.node = {id:this.graph.nextid++}; // Null reference to group.node here
         group.svg = this;
         group.drag(ondragmove, ondragdown, ondragup);
@@ -303,17 +293,17 @@ function svg(canvasid,tipid) {
             this.transform("t"+this.x+","+this.y);
             this.svg.paper.safari(); // Handle rendering bug in Safari
         };
-        // group.setText = function(text) {
-           // Update
-            // this.text.attr('text',text);
-            // var bbox = this.text.getBBox();
-            // objatt = {
-                // width : Math.max(bbox.width+10, this.getBBox().width),
-                // height : Math.max(bbox.height,this.shape.attr('height'))
-            // };
-            // objatt.x = this.shape.attr('x')-((objatt.width-this.shape.attr('width'))/2);
-            // this.shape.attr(objatt);
-        // }
+        group.setText = function(text) {
+            // Update
+            this.text.attr('text',text);
+            var bbox = this.text.getBBox();
+            objatt = {
+                width : Math.max(bbox.width+10, this.getBBox().width),
+                height : Math.max(bbox.height,this.shape.attr('height'))
+            };
+            objatt.x = this.shape.attr('x')-((objatt.width-this.shape.attr('width'))/2);
+            this.shape.attr(objatt);
+        }
         group.setPosition(x,y); // Consider placing shapes relative to 0 so this is more useful
         this.graph.nodes.push(group);
         // this.graph.nodes[group.node.id] = group;
@@ -322,50 +312,37 @@ function svg(canvasid,tipid) {
         return group;
     };
     
+    // div panel;
+    
     // Set Shape Text 
     this.setShapeText = function() {
         if (this.graph.selected) {
-            var obj = this.graph.selected, 
-            value = obj.img.text;
-            value = prompt("Enter value for the selected object.",value);
+            var obj = this.graph.selected, value = obj.text.attr('text');
+		$('#background').css({'display':'inline'});
+$('#panel').css({'display':'inline'});
+			var windowWidth = $(window).width();
+			var windowHeight = $(window).height();
+			var popupHeight = $("#panel").height();
+			var popupWidth = $("#panel").width();
+			$("#panel").css({
+				"position": "absolute",
+				"top": $(window).scrollTop()+windowHeight/2-popupHeight/2,
+				"left": windowWidth/2-popupWidth/2
+	});
+            value="nimei";
             if (value) {
                 // Update Text
-                //obj.text.attr({text:value});
+                obj.text.attr({text:'<span lang="latex">frac{1+sin(x)}{x^3}</span>'});
                 // Resize Shape if necessary
-                // var bbox = obj.text.getBBox();
-                // objatt = {
-                    // width : Math.max(bbox.width+10, obj.getBBox().width),
-                    // height : Math.max(bbox.height,obj.shape.attr('height'))
-                // };
-                // objatt.x = obj.shape.attr('x')-((objatt.width-obj.shape.attr('width'))/2);
-                // obj.shape.attr(objatt);
+                var bbox = obj.text.getBBox();
+                objatt = {
+                    width : Math.max(bbox.width+10, obj.getBBox().width),
+                    height : Math.max(bbox.height,obj.shape.attr('height'))
+                };
+                objatt.x = obj.shape.attr('x')-((objatt.width-obj.shape.attr('width'))/2);
+                obj.shape.attr(objatt);
+                //mathjax
 				
-                //Update image
-       			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
-       			 var newImg = new Image();
-       			 newImg.src = imgSrc;
-				 imgReady(imgSrc, function () {
-				    imgatt = {
-						width :newImg.width,
-						height :newImg.height
-						
-					};
-		            objatt = {
-						width :newImg.width+20,
-						height :newImg.height+20,
-						rx: newImg.width/2+20,
-						ry: newImg.height/2+20,
-						cx: newImg.width/2,
-						cy: newImg.height/2
-					};
-					obj.shape.attr(objatt);
-					obj.img.attr(imgatt);
-                
-					obj.img.text = value;
-					obj.img.node.src = imgSrc;
-					obj.img.node.href.baseVal = imgSrc;
-				});
-
             }
         } else {
             alert("No object is selected.");
@@ -494,7 +471,7 @@ function svg(canvasid,tipid) {
                 type:   n.shape.type,
                 x:      n.x,
                 y:      n.y,
-                text:   n.img.text,
+                text:   n.text.attr('text'),
             };
             nodes.push(attrs);
         });
