@@ -303,43 +303,10 @@ function svg(canvasid,tipid) {
             this.transform("t"+this.x+","+this.y);
             this.svg.paper.safari(); // Handle rendering bug in Safari
         };
-        // group.setText = function(text) {
+         group.setText = function(text) {
            // Update
-            // this.text.attr('text',text);
-            // var bbox = this.text.getBBox();
-            // objatt = {
-                // width : Math.max(bbox.width+10, this.getBBox().width),
-                // height : Math.max(bbox.height,this.shape.attr('height'))
-            // };
-            // objatt.x = this.shape.attr('x')-((objatt.width-this.shape.attr('width'))/2);
-            // this.shape.attr(objatt);
-        // }
-        group.setPosition(x,y); // Consider placing shapes relative to 0 so this is more useful
-        this.graph.nodes.push(group);
-        // this.graph.nodes[group.node.id] = group;
-        
-        // Return Group
-        return group;
-    };
-    
-    // Set Shape Text 
-    this.setShapeText = function() {
-        if (this.graph.selected) {
-            var obj = this.graph.selected, 
-            value = obj.img.text;
-            value = prompt("Enter value for the selected object.",value);
-            if (value) {
-                // Update Text
-                //obj.text.attr({text:value});
-                // Resize Shape if necessary
-                // var bbox = obj.text.getBBox();
-                // objatt = {
-                    // width : Math.max(bbox.width+10, obj.getBBox().width),
-                    // height : Math.max(bbox.height,obj.shape.attr('height'))
-                // };
-                // objatt.x = obj.shape.attr('x')-((objatt.width-obj.shape.attr('width'))/2);
-                // obj.shape.attr(objatt);
-				
+              var value = text;
+              var obj = this;
                 //Update image
        			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
        			 var newImg = new Image();
@@ -365,7 +332,65 @@ function svg(canvasid,tipid) {
 					obj.img.node.src = imgSrc;
 					obj.img.node.href.baseVal = imgSrc;
 				});
-
+         }
+        group.setPosition(x,y); // Consider placing shapes relative to 0 so this is more useful
+        this.graph.nodes.push(group);
+        // this.graph.nodes[group.node.id] = group;
+        
+        // Return Group
+        return group;
+    };
+    
+    this.editShapeText = function(){
+    	 if (this.graph.selected) {
+    	 	loadPopupBox();
+    	 	$("#text").val(this.graph.selected.img.text);
+    	 } else {
+			alert("No object is selected.");
+    	 }
+    };
+    // Set Shape Text 
+    this.setShapeText = function() {
+        if (this.graph.selected) {
+            value = $("#text").val();
+            if (value) {
+                // Update Text
+                //obj.text.attr({text:value});
+                // Resize Shape if necessary
+                // var bbox = obj.text.getBBox();
+                // objatt = {
+                    // width : Math.max(bbox.width+10, obj.getBBox().width),
+                    // height : Math.max(bbox.height,obj.shape.attr('height'))
+                // };
+                // objatt.x = obj.shape.attr('x')-((objatt.width-obj.shape.attr('width'))/2);
+                // obj.shape.attr(objatt);
+				var obj = this.graph.selected;
+                //Update image
+       			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
+       			 var newImg = new Image();
+       			 newImg.src = imgSrc;
+				 imgReady(imgSrc, function () {
+				    imgatt = {
+						width :newImg.width,
+						height :newImg.height
+						
+					};
+		            objatt = {
+						width :newImg.width+20,
+						height :newImg.height+20,
+						rx: newImg.width/2+20,
+						ry: newImg.height/2+20,
+						cx: newImg.width/2,
+						cy: newImg.height/2
+					};
+					obj.shape.attr(objatt);
+					obj.img.attr(imgatt);
+                
+					obj.img.text = value;
+					obj.img.node.src = imgSrc;
+					obj.img.node.href.baseVal = imgSrc;
+				});
+				unloadPopupBox();
             }
         } else {
             alert("No object is selected.");
@@ -547,5 +572,25 @@ function svg(canvasid,tipid) {
     }
 }
 
+
+
+		function unloadPopupBox() {	// TO Unload the Popupbox
+			$('#dialog').fadeOut(500);
+			$("#box").css({ // this is just for style		
+				"opacity": "1"  
+			}); 
+		}	
+		
+		function loadPopupBox() {	// To Load the Popupbox
+			$("#box").css({ // this is just for style
+				"display": "block"
+				//"opacity": "0.3"  
+			});
+			$('#dialog').fadeIn(500)
+						.css({
+				         "opacity": "1"  
+			});
+ 		
+		}
 // $('#json').html(r.toJSON());
 // $('#svg').html($('#canvas').html().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));

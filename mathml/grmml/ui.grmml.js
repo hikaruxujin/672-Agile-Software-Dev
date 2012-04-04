@@ -43,7 +43,7 @@ $.widget("ui.grmml", {
             "Clear": function() {this.svg.removeShape(true);}
         },
         "Shape": {
-            "Edit Text": function() {this.svg.setShapeText();},
+            "Edit Text": function() {this.svg.editShapeText(); },
             "Connect": function() {this.svg.connectShapes();},
             "Deselect": function() {this.svg.deselect();},
             "Delete": function() {this.svg.removeShape();}
@@ -92,6 +92,27 @@ $.widget("ui.grmml", {
                 padding:'0 0 0 5px',
                 color:'#555'
             });
+           this.dom.dialog = $('<div id="dialog">')
+            .css({
+                display:'none', /* Hide the DIV */
+				position:'fixed',  
+				_position:'absolute', /* hack for internet explorer 6 */  
+				height:'200px',  
+				width:'500px', 
+				background:'#ddf',  
+				left: '300px',
+				top: '150px',
+				'z-index':'100', /* Layering ( on-top of others), if you have lots of layers: I just maximized, you can change it yourself */
+				'margin-left': '15px',  
+				
+				/* additional features, can be omitted */
+				border:'2px solid #fdd',  	
+				padding:'15px',
+				'font-size':'15px',  
+				'-moz-box-shadow': '0 0 5px #fdd',
+				'-webkit-box-shadow': '0 0 5px #fdd',
+				'box-shadow': '0 0 5px #fdd'
+            });
         this.element
             .css({background:'#fff'})
             .html('')
@@ -99,6 +120,7 @@ $.widget("ui.grmml", {
                 .append(this.dom.menu)
                 .append(this.dom.canvas)
                 .append(this.dom.status)
+                .append(this.dom.dialog)
             );
             
         // Shapes Dropdown
@@ -132,8 +154,32 @@ $.widget("ui.grmml", {
                 .append(div));
         });
         
-        // SVG
+        //SVG
         this.svg = new svg('canvas','status');
+        
+        //Create dialog
+        var note = $('<label>').html('Please input equations of LaTex!');
+        var textarea = $('<textarea id="text">')
+					  .css({
+							'height':'100px',
+							'width':'500px',
+							'vertical-align':'middle',
+					  });
+		var self = this;
+		var ok = $('<button id="ok">').html('OK').click(function() {
+			// Do something
+			self.svg.setShapeText();
+			unloadPopupBox();	
+		});
+		var cancel = $('<button id="cancel">').html('CANCEL').click(function() {
+			// Do something
+			unloadPopupBox();
+		});
+        this.dom.dialog.append(note)
+					   .append(textarea)
+					   .append(ok)
+					   .append(cancel);
+        
 	},
 	destroy: function() {
 		this.element.html('');

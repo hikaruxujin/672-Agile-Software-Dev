@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" xml:lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="css/jqpopup.css"/>
+<script type="text/javascript" src="js/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.bgiframe.min.js"></script>
+<script type="text/javascript" src="js/jqDnR.min.js"></script>
+<script type="text/javascript" src="js/jquery.jqpopup.min.js"></script>
+<style type="text/css">
+.stdbtn { width:280px; }
+</style>
+</head>
+<body>
+   <div id="sampleformdiv" style="display:none" title="1st jQpopup box">
+      This is the 1st jQpopup box<br/>
+      <form method="post" id="sampleform" name="sampleform" action="">
+         <input type="text" name="content" id="content"/>
+         <input type="submit" value="save"/>
+      </form>
+   </div>
+
+   <div id="sampleformdiv1" style="display:none" title="2nd jQpopup box">
+      The is the 2nd jQpopup box<br/>
+      <form method="post" id="sampleform1" name="sampleform1" action="">
+         <input type="text" name="content1" id="content1"/>
+         <input type="submit" value="save"/>
+      </form>
+   </div>
+   <p>
+   <input type="button" class="stdbtn" id="open_btn" value="open the 1st jQpopup"/><br/>
+   <input type="button" class="stdbtn" id="close_btn" value="close the 1st jQpopup"/><br/>
+   <input type="button" class="stdbtn" id="center_btn" value="reposition 1st jQpopup to center"/><br/>
+   <input type="button" class="stdbtn" id="top_btn" value="1st jQpopup to top"/><br/>
+   </p>
+   <p>
+   <input type="button" class="stdbtn" id="open_btn1" value="open the 2nd jQpopup"/><br/>
+   <input type="button" class="stdbtn" id="close_btn1" value="close the 2nd jQpopup"/><br/>
+   <input type="button" class="stdbtn" id="center_btn1" value="reposition 2nd jQpopup to center"/><br/>
+   <input type="button" class="stdbtn" id="top_btn1" value="2nd jQpopup to top"/><br/>
+   </p>
+   <input type="button" class="stdbtn" id="open_btn2" value="open jQpopup with modal"/><br/>
+   </p>
+
+   <select>
+      <option>jQpopup box always on top of the combo box</option>
+   </select>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+   $("#open_btn").click(function () {
+      $("#sampleformdiv").jqpopup_open(this.id);
+   });
+
+   $("#close_btn").click(function () {
+      $("#sampleformdiv").jqpopup_close();
+   });
+
+
+   $("#open_btn1").click(function () {
+      $("#sampleformdiv1").jqpopup_open(this.id);
+   });
+
+   $("#close_btn1").click(function () {
+      $("#sampleformdiv1").jqpopup_close();
+   });
+
+
+   $("#center_btn").click(function () {
+      $("#sampleformdiv").jqpopup_toCenter();
+   });
+
+
+   $("#center_btn1").click(function () {
+      $("#sampleformdiv1").jqpopup_toCenter();
+   });
+
+   $("#top_btn").click(function () {
+      $("#sampleformdiv").jqpopup_toTop();
+   });
+
+
+   $("#top_btn1").click(function () {
+      $("#sampleformdiv1").jqpopup_toTop();
+   });
+
+   //set modal to true
+   $("#open_btn2").click(function () {
+      $("#sampleformdiv").jqpopup_open(this.id,true);
+   });
+});
+</script>
+
+</body>
+</html>

@@ -31,18 +31,11 @@ $.widget("ui.grmml", {
                         $('#debug').prepend('Error '+status+'<br>');
                     }
                 });
-            },
+            }
             //"Save": function() {},
             //"Load": function() {}
             //"JSON": function() {$('#console').html(this.svg.toJSON());}
-            "MathML":function(){
-				var text = '<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>=</mo><mn>0</mn></math>';
-                $("#debug").append('<div>' + text + '</div>');
-                $('tspan').append( text );
-               
-				MathJax.Hub.Typeset(["debug"]); 
-				MathJax.Hub.Typeset(["canvas"]); 
-            }
+
         },
         "Canvas": {
             "New": function() {this.svg.addShape(this.dom.shapes.val());},
