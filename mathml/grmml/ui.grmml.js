@@ -158,14 +158,24 @@ $.widget("ui.grmml", {
         this.svg = new svg('canvas','status');
         
         //Create dialog
-        var note = $('<label>').html('Please input equations of LaTex!');
+        var note = $('<label>').html('Preview: ');
+		var img = $('<img id="view" />')
+					.attr("src","http://latex.codecogs.com/png.latex?"
+					+($("#text").val()?$("#text").val():"null"));
+		var editor = $('<div id="editor" >');
         var textarea = $('<textarea id="text">')
 					  .css({
 							'height':'100px',
 							'width':'500px',
 							'vertical-align':'middle',
+					  })
+					  .keyup(function(){
+						$('#view')
+						.attr("src","http://latex.codecogs.com/png.latex?"
+						+($("#text").val()?$("#text").val():"null"));
 					  });
 		var self = this;
+		
 		var ok = $('<button id="ok">').html('OK').click(function() {
 			// Do something
 			self.svg.setShapeText();
@@ -175,11 +185,20 @@ $.widget("ui.grmml", {
 			// Do something
 			unloadPopupBox();
 		});
+		
+
         this.dom.dialog.append(note)
+					   .append(img)
+					   .append(editor)
 					   .append(textarea)
 					   .append(ok)
-					   .append(cancel);
-        
+					   .append(cancel)
+					   .ready(function(){
+							// EqEditor.embed('editor','');
+							// var a=new EqTextArea('view', 'text');
+							// EqEditor.add(a,false);
+							//alert("gogo");
+					   });
 	},
 	destroy: function() {
 		this.element.html('');

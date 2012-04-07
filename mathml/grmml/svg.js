@@ -188,8 +188,8 @@ var ondragdown = function(){
         var bbox = this.group.getBBox();
         var x = this.group.ox + dx;
         var y = this.group.oy + dy;
-        x = Math.min(Math.max(x,bbox.width/2),canvas.width()-bbox.width/2);
-        y = Math.min(Math.max(y,bbox.height/2),canvas.height()-bbox.height/2);
+        x = Math.min(Math.max(x,0),canvas.width()-bbox.width);
+        y = Math.min(Math.max(y,0),canvas.height()-bbox.height);
 
         this.group.setPosition(x, y);
         // Redraw connections
@@ -345,6 +345,8 @@ function svg(canvasid,tipid) {
     	 if (this.graph.selected) {
     	 	loadPopupBox();
     	 	$("#text").val(this.graph.selected.img.text);
+			$('#view').attr("src","http://latex.codecogs.com/png.latex?"
+						+($("#text").val()?$("#text").val():"null"));
     	 } else {
 			alert("No object is selected.");
     	 }
