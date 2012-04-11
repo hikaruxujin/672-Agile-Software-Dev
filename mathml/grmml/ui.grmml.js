@@ -162,7 +162,9 @@ $.widget("ui.grmml", {
 		var img = $('<img id="view" />')
 					.attr("src","http://latex.codecogs.com/png.latex?"
 					+($("#text").val()?$("#text").val():"null"));
-		var editor = $('<div id="editor" >');
+					
+					
+		var editor = $('<div id="editor" />');
         var textarea = $('<textarea id="text">')
 					  .css({
 							'height':'100px',
@@ -185,6 +187,13 @@ $.widget("ui.grmml", {
 			// Do something
 			unloadPopupBox();
 		});
+		var visual = $('<button id="visual">').html('VISUAL').click(function() {
+			// Do something
+			//EqEditor.embed("debug","");
+			//var a=new EqTextArea('view', 'text');
+			//EqEditor.add(a,false);
+			unloadPopupBox();
+		});
 		
 
         this.dom.dialog.append(note)
@@ -193,11 +202,12 @@ $.widget("ui.grmml", {
 					   .append(textarea)
 					   .append(ok)
 					   .append(cancel)
+					   .append(visual)
 					   .ready(function(){
 							// EqEditor.embed('editor','');
 							// var a=new EqTextArea('view', 'text');
 							// EqEditor.add(a,false);
-							//alert("gogo");
+							alert("gogo");
 					   });
 	},
 	destroy: function() {
