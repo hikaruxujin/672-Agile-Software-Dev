@@ -92,6 +92,7 @@ $.widget("ui.grmml", {
                 padding:'0 0 0 5px',
                 color:'#555'
             });
+			//dialog
            this.dom.dialog = $('<div id="dialog">')
             .css({
                 display:'none', /* Hide the DIV */
@@ -158,7 +159,8 @@ $.widget("ui.grmml", {
         this.svg = new svg('canvas','status');
         
         //Create dialog
-        var note = $('<label>').html('Preview: ');
+		//preview
+        var note = $('<label>').html('Please input latex format equations!<br/> Preview: ');
 		var img = $('<img id="view" />')
 					.attr("src","http://latex.codecogs.com/png.latex?"
 					+($("#text").val()?$("#text").val():"null"));
@@ -189,9 +191,9 @@ $.widget("ui.grmml", {
 		});
 		var visual = $('<button id="visual">').html('VISUAL').click(function() {
 			// Do something
-			//EqEditor.embed("debug","");
-			//var a=new EqTextArea('view', 'text');
-			//EqEditor.add(a,false);
+			// EqEditor.embed("debug","");
+			// var a=new EqTextArea('view', 'text');
+			// EqEditor.add(a,false);
 			unloadPopupBox();
 		});
 		
@@ -202,12 +204,12 @@ $.widget("ui.grmml", {
 					   .append(textarea)
 					   .append(ok)
 					   .append(cancel)
-					   .append(visual)
+					   //.append(visual)
 					   .ready(function(){
 							// EqEditor.embed('editor','');
 							// var a=new EqTextArea('view', 'text');
 							// EqEditor.add(a,false);
-							alert("gogo");
+							//alert("gogo");
 					   });
 	},
 	destroy: function() {

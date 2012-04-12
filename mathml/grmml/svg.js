@@ -244,6 +244,8 @@ function svg(canvasid,tipid) {
         var y = this.canvas.height() / 2;
         var element;
 		var imgElement;
+		
+		var imgSrc = "http://latex.codecogs.com/png.latex?";
         switch (shape) {
             case "circle":
                 element = this.paper.circle(0,0,30);
@@ -262,15 +264,13 @@ function svg(canvasid,tipid) {
 				imgElement = this.paper.image(imgSrc,10,10,0,0);
                 break;
         }
-        //var textElement = this.paper.text(0, 0, "");
         
         //image
-        var imgSrc = "http://latex.codecogs.com/png.latex?";
        	//var imgSrc = "http://latex.codecogs.com/svg.latex?"+value;
        	var newImg = new Image();
        	newImg.src = imgSrc;
  
-        imgElement.text = "";
+        textElement = "";
         // Defaults
         element.attr({
             fill:"#ddf", 
@@ -292,7 +292,7 @@ function svg(canvasid,tipid) {
         
         // Group pointers and functions
         group.shape = element;
-        //group.text = textElement;
+        group.text = textElement;
         group.img = imgElement;
         group.node = {id:this.graph.nextid++}; // Null reference to group.node here
         group.svg = this;
@@ -311,27 +311,31 @@ function svg(canvasid,tipid) {
        			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
        			 var newImg = new Image();
        			 newImg.src = imgSrc;
-				 imgReady(imgSrc, function () {
-				    imgatt = {
-						width :newImg.width,
-						height :newImg.height
-						
-					};
-		            objatt = {
-						width :newImg.width+20,
-						height :newImg.height+20,
-						rx: newImg.width/2+20,
-						ry: newImg.height/2+20,
-						cx: newImg.width/2,
-						cy: newImg.height/2
-					};
-					obj.shape.attr(objatt);
-					obj.img.attr(imgatt);
-                
-					obj.img.text = value;
-					obj.img.node.src = imgSrc;
-					obj.img.node.href.baseVal = imgSrc;
-				});
+				 //Ready
+				 //value exists
+				 if(value!=""){
+					 imgReady(imgSrc, function () {
+						imgatt = {
+							width :newImg.width,
+							height :newImg.height
+							
+						};
+						objatt = {
+							width :newImg.width+20,
+							height :newImg.height+20,
+							rx: newImg.width/2+20,
+							ry: newImg.height/2+20,
+							cx: newImg.width/2,
+							cy: newImg.height/2
+						};
+						obj.shape.attr(objatt);
+						obj.img.attr(imgatt);
+					
+						obj.text = value;
+						obj.img.node.src = imgSrc;
+						obj.img.node.href.baseVal = imgSrc;
+					});
+				}
          }
         group.setPosition(x,y); // Consider placing shapes relative to 0 so this is more useful
         this.graph.nodes.push(group);
@@ -343,8 +347,9 @@ function svg(canvasid,tipid) {
     
     this.editShapeText = function(){
     	 if (this.graph.selected) {
+			//popup box
     	 	loadPopupBox();
-    	 	$("#text").val(this.graph.selected.img.text);
+    	 	$("#text").val(this.graph.selected.text);
 			$('#view').attr("src","http://latex.codecogs.com/png.latex?"
 						+($("#text").val()?$("#text").val():"null"));
     	 } else {
@@ -371,6 +376,8 @@ function svg(canvasid,tipid) {
        			 var imgSrc = "http://latex.codecogs.com/png.latex?"+value;
        			 var newImg = new Image();
        			 newImg.src = imgSrc;
+				 
+				 //Ready
 				 imgReady(imgSrc, function () {
 				    imgatt = {
 						width :newImg.width,
@@ -388,7 +395,7 @@ function svg(canvasid,tipid) {
 					obj.shape.attr(objatt);
 					obj.img.attr(imgatt);
                 
-					obj.img.text = value;
+					obj.text = value;
 					obj.img.node.src = imgSrc;
 					obj.img.node.href.baseVal = imgSrc;
 				});
@@ -521,7 +528,7 @@ function svg(canvasid,tipid) {
                 type:   n.shape.type,
                 x:      n.x,
                 y:      n.y,
-                text:   n.img.text,
+                text:   n.text,
             };
             nodes.push(attrs);
         });
