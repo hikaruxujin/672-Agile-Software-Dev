@@ -349,7 +349,8 @@ function svg(canvasid,tipid) {
     	 if (this.graph.selected) {
 			//popup box
     	 	loadPopupBox();
-    	 	$("#text").val(this.graph.selected.text);
+    	 	$("#text").val(this.graph.selected.text)
+                      .focus();
 			$('#view').attr("src","http://latex.codecogs.com/png.latex?"
 						+($("#text").val()?$("#text").val():"null"));
     	 } else {
@@ -400,6 +401,25 @@ function svg(canvasid,tipid) {
 					obj.img.node.href.baseVal = imgSrc;
 				});
 				unloadPopupBox();
+            } else {
+                var obj = this.graph.selected;
+                	 imgatt = {
+						width :0,
+						height :0
+						
+					};
+		            objatt = {
+						width :100,
+						height :60,
+						rx: 50,
+						ry: 30,
+						cx: 0,
+						cy: 0
+					};
+					obj.shape.attr(objatt);
+					obj.img.attr(imgatt);
+                
+					obj.text = value;
             }
         } else {
             alert("No object is selected.");
